@@ -65,7 +65,7 @@ https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 ```
 
 ### 使用方式
-回复图片消息并输入：/osugreek <希腊字母名称>
+- 回复图片消息并输入：/osugreek <希腊字母名称>
 
 <details> 
 <summary>示例</summary>
@@ -74,8 +74,12 @@ https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 *我得了一种看见希腊字母就会笑的病*
 </details>
 
-### <details><summary>自定义图片</summary>
+### 其他
+
+<details><summary>修改图片</summary>
+
   
-如果需要添加新的希腊字母，只需将 PNG 图片放入 images/ 目录
+- 默认提取 **images/** 目录内的所有PNG格式文件
+- 如果需要添加或修改新的希腊字母，只需将 PNG 图片放入 images/ 目录即可
 
 </details>
