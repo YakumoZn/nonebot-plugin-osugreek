@@ -9,12 +9,22 @@
 
 
 ## 安装
+<details><summary> 本插件依赖以下库：</summary>
+  
+nonebot2 >= 2.0.0
+  
+Pillow >= 9.0.0
+
+aiohttp >= 3.8.0
+
+
+</details>
 
 ### 使用 nb-cli
 留空
 
 ### pip
-留空
+pip install nonebot-plugin-osugreek
 
 ### 从 GitHub 安装
 https://github.com/YakumoZn/nonebot-plugin-osugreek.git
