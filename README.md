@@ -10,12 +10,14 @@
 
 ## 安装
 
-### 方法一：使用 nb-cli（推荐）
+### 使用 nb-cli
 留空
 
-### 方法二：从 GitHub 安装
-pip install git+https://github.com/YakumoZn/nonebot-plugin-osugreek.git安装git https://github.com/YakumoZn
-onebot-plugin-osugreek.git
+### pip
+留空
+
+### 从 GitHub 安装
+https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 
 
 ## 使用
