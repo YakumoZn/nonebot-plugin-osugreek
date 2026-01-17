@@ -1,0 +1,25 @@
+[project]
+name = "nonebot-plugin-osugreek"
+version = "1.0.0"
+description = "在图片中央贴上神秘4k希腊字母并添加色散效果的 NoneBot2 插件"
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = [
+    "nonebot2>=2.0.0",
+    "pillow>=9.0.0",
+    "aiohttp>=3.8.0",
+]
+
+[project.license]
+text = "MIT"
+
+[project.urls]
+Homepage = "https://github.com/YakumoZn/nonebot-plugin-osugreek"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.entry-points."nonebot.plugin"]
+osugreek = "nonebot_plugin_osugreek"
