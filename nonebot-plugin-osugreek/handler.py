@@ -1,15 +1,24 @@
+# handler.py
 from nonebot import on_message
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, MessageSegment
 from PIL import Image, ImageChops
 import aiohttp
+import asyncio
+import os
+import time
+import random
 from io import BytesIO
 from pathlib import Path
 
 osugreek = on_message(priority=5, block=False)
 
-# 图片目录路径
-IMAGE_DIR = Path(__file__).parent / "images"
-IMAGE_DIR.mkdir(exist_ok=True)
+# 希腊字母图片目录
+GREEK_IMAGE_DIR = Path(__file__).parent / "images"
+GREEK_IMAGE_DIR.mkdir(exist_ok=True)
+
+# 临时缓存目录
+TEMP_CACHE_DIR = Path(__file__).parent / "data"
+TEMP_CACHE_DIR.mkdir(exist_ok=True)
 
 
 def add_chromatic_aberration(image: Image.Image, intensity: int = 2) -> Image.Image:
@@ -43,16 +52,33 @@ def resize_greek_image(greek_img: Image.Image, original_width: int, original_hei
     return greek_img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
 
+async def cleanup_temp_file(file_path: Path, delay: float = 5.0):
+    """清理临时文件"""
+    await asyncio.sleep(delay)
+    try:
+        if file_path.exists():
+            file_path.unlink()
+    except:
+        pass
+
+
+def generate_temp_filename() -> str:
+    """生成唯一的临时文件名"""
+    timestamp = int(time.time() * 1000)
+    random_suffix = random.randint(1000, 9999)
+    return f"processed_{timestamp}_{random_suffix}.png"
+
+
 @osugreek.handle()
 async def handle_osugreek(bot: Bot, event: MessageEvent):
     # 获取消息文本
     msg_text = event.get_plaintext().strip()
     
-    # 检查是否是osugreek命令
+    # 检查命令
     if not (msg_text.startswith("/osugreek ") or msg_text.startswith("/希腊字母 ")):
         return
     
-    # 提取希腊字母名称
+    # 提取希腊字母图片名称
     greek_name = msg_text[10:].strip() if msg_text.startswith("/osugreek ") else msg_text[5:].strip()
     
     if not greek_name:
@@ -90,15 +116,16 @@ async def handle_osugreek(bot: Bot, event: MessageEvent):
         return
 
     # 处理图片
+    temp_output_path = None
     try:
         original_img = Image.open(BytesIO(img_data)).convert("RGBA")
         
         chromatic_img = add_chromatic_aberration(original_img, intensity=2)
         
-        greek_img_path = IMAGE_DIR / f"{greek_name}.png"
+        greek_img_path = GREEK_IMAGE_DIR / f"{greek_name}.png"
 
         if not greek_img_path.exists():
-            available = [f.stem for f in IMAGE_DIR.glob("*.png")]
+            available = [f.stem for f in GREEK_IMAGE_DIR.glob("*.png")]
             await bot.send(event, f"未找到 {greek_name}.png\n可用的有: {', '.join(available)}")
             return
 
@@ -118,11 +145,18 @@ async def handle_osugreek(bot: Bot, event: MessageEvent):
         combined.paste(chromatic_img, (0, 0))
         combined.paste(greek_img, (x, y), greek_img)
 
+        # 生成临时文件
+        temp_filename = generate_temp_filename()
+        temp_output_path = TEMP_CACHE_DIR / temp_filename
+        combined.save(temp_output_path, format="PNG")
+        
         # 发送图片
-        output_path = IMAGE_DIR / "processed.png"
-        combined.save(output_path, format="PNG")
-        await bot.send(event, MessageSegment.image(f"file:///{output_path.absolute()}"))
+        await bot.send(event, MessageSegment.image(f"file:///{temp_output_path.absolute()}"))
 
     except Exception as e:
         await bot.send(event, f"图片处理失败: {e}")
         return
+    finally:
+        # 清理临时文件
+        if temp_output_path and temp_output_path.exists():
+            asyncio.create_task(cleanup_temp_file(temp_output_path))

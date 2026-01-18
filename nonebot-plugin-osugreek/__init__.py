@@ -1,7 +1,7 @@
 from nonebot.plugin import PluginMetadata
 from .handler import osugreek
 
-__version__ = "1.0.1"
+__version__ = "1.0.4"
 __plugin_meta__ = PluginMetadata(
     name="osugreek",
     description="在图片中央贴上神秘4k希腊字母并添加色散效果的插件",
