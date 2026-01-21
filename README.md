@@ -84,8 +84,8 @@ https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 在 `.env` 文件中可以设置以下配置项：
 
 ```env
-# 色散强度（范围1-10，默认2）
-OSUGREEK_CHROMATIC_INTENSITY=2
+# 色散强度（范围1-10，默认4）
+OSUGREEK_CHROMATIC_INTENSITY=4
 ```
 </details>
 <details><summary><strong>图片</strong></summary>
