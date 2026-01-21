@@ -1,6 +1,7 @@
 # handler.py
 from nonebot import on_message
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, MessageSegment
+from nonebot import get_plugin_config  # 添加这行
 from PIL import Image, ImageChops
 import aiohttp
 import asyncio
@@ -9,6 +10,12 @@ import time
 import random
 from io import BytesIO
 from pathlib import Path
+
+# 导入配置类
+from .config import Config
+
+# 插件配置
+plugin_config = get_plugin_config(Config)
 
 osugreek = on_message(priority=5, block=False)
 
@@ -21,8 +28,14 @@ TEMP_CACHE_DIR = Path(__file__).parent / "data"
 TEMP_CACHE_DIR.mkdir(exist_ok=True)
 
 
-def add_chromatic_aberration(image: Image.Image, intensity: int = 2) -> Image.Image:
+def add_chromatic_aberration(image: Image.Image, intensity: int = None) -> Image.Image:
     """色散效果"""
+    # 使用默认
+    if intensity is None:
+        intensity = plugin_config.osugreek_chromatic_intensity
+    
+    intensity = max(1, min(10, intensity))
+    
     r, g, b = image.split()[:3]
     r_offset = ImageChops.offset(r, -intensity, -intensity)  
     b_offset = ImageChops.offset(b, intensity, intensity)     
@@ -120,7 +133,8 @@ async def handle_osugreek(bot: Bot, event: MessageEvent):
     try:
         original_img = Image.open(BytesIO(img_data)).convert("RGBA")
         
-        chromatic_img = add_chromatic_aberration(original_img, intensity=2)
+        # 使用配置2
+        chromatic_img = add_chromatic_aberration(original_img)
         
         greek_img_path = GREEK_IMAGE_DIR / f"{greek_name}.png"
 

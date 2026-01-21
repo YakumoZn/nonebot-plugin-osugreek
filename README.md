@@ -33,7 +33,7 @@ aiohttp >= 3.8.0
 
 </details>
 
-### 使用 nb-cli
+### 使用 nb-cli (暂留空)
 
 ```shell
 nb plugin install nonebot-plugin-osugreek
@@ -68,15 +68,27 @@ https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 - 回复图片消息并输入：/osugreek <希腊字母名称>
 
 <details> 
-<summary>示例</summary>
+<summary><strong>示例</strong></summary>
 
 ![](https://i.ibb.co/xTL64vr/228922e3afd8a362ad5612a0645951b7.jpg)
 *我得了一种看见希腊字母就会笑的病*
 </details>
 
+
 ### 其他
 
-<details><summary>修改图片</summary>
+
+<details><summary><strong>配置</strong></summary>
+
+
+在 `.env` 文件中可以设置以下配置项：
+
+```env
+# 色散强度（范围1-10，默认2）
+OSUGREEK_CHROMATIC_INTENSITY=2
+```
+</details>
+<details><summary><strong>图片</strong></summary>
 
   
 - 默认提取 **images/** 目录内的所有PNG格式文件
