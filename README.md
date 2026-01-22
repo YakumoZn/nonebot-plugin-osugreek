@@ -24,11 +24,13 @@ _✨ 在图片上添加osu!mania 4k神秘希腊字母的 NoneBot2 插件，可�
 <details><summary> 本插件依赖以下库：</summary>
   
 ```shell  
-nonebot2 >= 2.0.0
+nonebot2 >= 2.3.0
   
 Pillow >= 9.0.0
 
 aiohttp >= 3.8.0
+
+nonebot-plugin-localstore >= 0.3.0
 ```
 
 </details>
