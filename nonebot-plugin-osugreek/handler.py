@@ -9,14 +9,17 @@ from io import BytesIO
 from pathlib import Path
 
 require("nonebot_plugin_localstore")
+_Ecache_dir = None
 
 
 def _get_cache_dir() -> Path:
     """获取当前插件的缓存目录"""
-    import nonebot_plugin_localstore as store
-    cache_dir = store.get_plugin_cache_dir()
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    return cache_dir
+    global _Ecache_dir
+    if _Ecache_dir is None: 
+        import nonebot_plugin_localstore as store
+        _Ecache_dir = store.get_plugin_cache_dir()
+        _Ecache_dir.mkdir(parents=True, exist_ok=True)
+    return _Ecache_dir
 
 
 from .config import Config
