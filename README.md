@@ -35,7 +35,7 @@ nonebot-plugin-localstore >= 0.3.0
 
 </details>
 
-### 使用 nb-cli (暂留空)
+### 使用 nb-cli
 
 ```shell
 nb plugin install nonebot-plugin-osugreek
