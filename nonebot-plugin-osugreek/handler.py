@@ -1,4 +1,4 @@
-from nonebot import on_message, get_plugin_config, require
+from nonebot import on_message, get_plugin_config, require, on_command
 from nonebot.adapters.onebot.v11 import Bot, MessageEvent, MessageSegment
 from PIL import Image, ImageChops
 import aiohttp
@@ -25,7 +25,7 @@ def _get_cache_dir() -> Path:
 from .config import Config
 
 plugin_config = get_plugin_config(Config)
-osugreek = on_message(priority=5, block=False)
+osugreek = on_command("osugreek", aliases={"希腊字母"}, priority=5, block=False)
 
 # 希腊字母图片目录
 GREEK_IMAGE_DIR = Path(__file__).parent / "images"
@@ -81,11 +81,13 @@ def generate_temp_filename() -> str:
 @osugreek.handle()
 async def handle_osugreek(bot: Bot, event: MessageEvent):
     msg_text = event.get_plaintext().strip()
-    if not (msg_text.startswith("/osugreek ") or msg_text.startswith("/希腊字母 ")):
-        return
-    greek_name = msg_text[10:].strip() if msg_text.startswith("/osugreek ") else msg_text[5:].strip()
-    if not greek_name:
-        await bot.send(event, "用法：/osugreek <希腊字母名称> 或 /希腊字母 <希腊字母名称>\n例如：/osugreek epsilon 或 /希腊字母 epsilon")
+    command_parts = msg_text.split(maxsplit=2)
+    greek_name = command_parts[1] if len(command_parts) > 1 else ""
+    greek_intensity = int(command_parts[2]) if len(command_parts) > 2 and command_parts[2].isdigit() else None
+    if greek_name == "help" or not greek_name:
+        await bot.send(event, "用法：/osugreek <希腊字母名称> <色散强度> 或 /希腊字母 <希腊字母名称> <色散强度>\n例如：/osugreek epsilon 5 或 /希腊字母 epsilon 5\n色散强度为1-10，默认为7")
+        available = [f.stem for f in GREEK_IMAGE_DIR.glob("*.png")]
+        await bot.send(event, f"可用的有: {', '.join(available)}")
         return
     image_msg = None
     for seg in event.message:
@@ -113,7 +115,7 @@ async def handle_osugreek(bot: Bot, event: MessageEvent):
     temp_output_path = None
     try:
         original_img = Image.open(BytesIO(img_data)).convert("RGBA")
-        chromatic_img = add_chromatic_aberration(original_img)
+        chromatic_img = add_chromatic_aberration(original_img, greek_intensity)
         greek_img_path = GREEK_IMAGE_DIR / f"{greek_name}.png"
         if not greek_img_path.exists():
             available = [f.stem for f in GREEK_IMAGE_DIR.glob("*.png")]
