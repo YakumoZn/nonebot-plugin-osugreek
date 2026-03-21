@@ -59,15 +59,15 @@ https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 ### 基础命令
 
 ```shell
-/osugreek <希腊字母名称> <RGB分离强度> #(1-10) 未填则使用默认强度
+/osugreek <希腊字母名称> [色散强度] [故障强度] # 未填则使用默认强度
 ```
 或
 ```shell
-/希腊字母 <希腊字母名称> <RGB分离强度> #(1-10) 未填则使用默认强度
+/希腊字母 <希腊字母名称> [色散强度] [故障强度] # 未填则使用默认强度
 ```
 
 ### 使用方式
-- 回复图片消息并输入：/osugreek <希腊字母名称> <RGB分离强度>
+- 回复图片消息并输入：/osugreek <希腊字母名称> \[色散强度\] \[故障强度\]
 
 <details> 
 <summary><strong>示例</strong></summary>
@@ -86,8 +86,10 @@ https://github.com/YakumoZn/nonebot-plugin-osugreek.git
 在 `.env` 文件中可以设置以下配置项：
 
 ```env
-# 色散强度（范围1-10，默认4）
-OSUGREEK_CHROMATIC_INTENSITY=4
+# RGB分离强度 (范围1-20, 默认4)
+osugreek_chromatic_intensity: int = 4
+# 故障效果强度 (范围0-5, 默认0, 0表示无故障效果)
+osugreek_glitch_intensity: int = 0
 ```
 </details>
 <details><summary><strong>图片</strong></summary>
